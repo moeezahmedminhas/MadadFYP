@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:madad_final/api/apis.dart';
 import 'package:madad_final/screens/auth/login_screen.dart';
 import 'package:madad_final/screens/home_screen.dart';
+import 'package:madad_final/screens/psychologist/psy_home.dart';
 import 'package:madad_final/screens/tabs_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,42 +28,42 @@ class _SplashScreenState extends State<SplashScreen> {
   String email = "";
   String password = "";
 
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(const Duration(milliseconds: 1500), () async {
+    // Start the timer and assign it to the variable
+    _timer = Timer(const Duration(milliseconds: 1500), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      //Return String
       String stringValue = prefs.getString('role') ?? "";
-      print(stringValue);
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       SystemChrome.setSystemUIOverlayStyle(
           const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-      // await APIs.auth.signOut().then((value) async {
-      //   await GoogleSignIn().signOut().then((value) {
-      //     //for hiding progress dialog
-      //     Navigator.of(context).pushAndRemoveUntil(
-      //         MaterialPageRoute(builder: (_) => const LoginScreen()),
-      //         (Route<dynamic> route) => false);
-
-      //     APIs.auth = FirebaseAuth.instance;
-      //   });
-      // });
-      // print(stringValue);
       if (context.mounted) {
         if (stringValue != "") {
           log("\nUSER:${FirebaseAuth.instance.currentUser}");
-          APIs.getSelfInfo();
-          if (stringValue == "user") {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const TabsScreen()));
-          } else if (stringValue == "admin") {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const AdminHome()));
-          } else if (stringValue == "psychiatrist") {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const AdminHome()));
+          final user = APIs.auth.currentUser;
+          if (user != null) {
+            // Use the variable to cancel the timer before navigating
+            _timer?.cancel();
+            APIs.getSelfInfo().then((value) {
+              stringValue = APIs.me.profession;
+              if (stringValue == "psychologist") {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PsyTabsScreen()));
+              } else if (stringValue == "user") {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const TabsScreen()));
+              } else if (stringValue == "admin") {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const AdminHome()));
+              }
+            });
           }
         } else {
           Navigator.pushReplacement(context,
@@ -69,6 +71,13 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // Cancel the timer when the widget is disposed
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override

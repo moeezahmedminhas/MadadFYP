@@ -2,37 +2,22 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../api/apis.dart';
-import '../screens/assesment_screen.dart';
-import './chats.dart';
-import '../screens/home_screen.dart';
-import '../screens/profile_screen.dart';
-import '../screens/reports_screen.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../api/apis.dart';
+import '../chats.dart';
+import '../profile_screen.dart';
 
-class TabsScreen extends StatefulWidget {
-  const TabsScreen({super.key});
+class PsyTabsScreen extends StatefulWidget {
+  const PsyTabsScreen({super.key});
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  State<PsyTabsScreen> createState() => _PsyTabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _PsyTabsScreenState extends State<PsyTabsScreen> {
   final List<Map<String, Object>> _pages = [
-    {
-      'page': const HomeScreen(),
-      'title': 'Home',
-    },
     {
       'page': const ChatsScreen(),
       'title': 'Chats',
-    },
-    {
-      'page': const AssesmentScreen(),
-      'title': 'Assesments',
-    },
-    {
-      'page': const ReportsScreen(),
-      'title': 'Reports',
     },
     {
       'page': ProfileScreen(),
@@ -50,11 +35,6 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   void initState() {
     super.initState();
-    APIs.getSelfInfo();
-
-    //for updating user active status according to lifecycle events
-    //resume -- active or online
-    //pause  -- inactive or offline
     SystemChannels.lifecycle.setMessageHandler((message) {
       log('Message: $message');
 
@@ -90,39 +70,11 @@ class _TabsScreenState extends State<TabsScreen> {
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: SvgPicture.asset(
-              'assets/icons/home.svg',
-              width: 18,
-              color: Colors.white,
-            ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).primaryColor,
-            icon: SvgPicture.asset(
               'assets/icons/chat-conversation.svg',
               width: 23,
               color: Colors.white,
             ),
             label: 'Chats',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).primaryColor,
-            icon: SvgPicture.asset(
-              'assets/icons/annual-assessment.svg',
-              width: 20,
-              allowDrawingOutsideViewBox: true,
-              color: Colors.white,
-            ),
-            label: 'Assesments',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).primaryColor,
-            icon: SvgPicture.asset(
-              'assets/icons/health-report.svg',
-              width: 20,
-              color: Colors.white,
-            ),
-            label: 'Reports',
           ),
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,

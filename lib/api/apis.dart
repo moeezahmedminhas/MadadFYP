@@ -247,19 +247,22 @@ class APIs {
 
   static Future<void> createPsy({
     required String uid,
+    required String name,
     required String profession,
+    required String gender,
+    required int age,
   }) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = UserModel(
         id: user.uid,
-        name: user.displayName.toString(),
+        name: name,
         email: user.email.toString(),
         about: "Hey, I'm using Madad!",
         image: user.photoURL.toString(),
         createdAt: time,
-        age: 18,
-        gender: "",
+        age: age,
+        gender: gender,
         profession: profession,
         isOnline: false,
         lastActive: time,
@@ -312,13 +315,16 @@ class APIs {
   }
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
-      List<String> userIds) {
+      List<String>? userIds) {
     log('\nUserIds: $userIds');
-
-    return firestore
-        .collection('users')
-        .where(FieldPath.documentId, whereIn: userIds)
-        .snapshots();
+    if (userIds == null || userIds.isEmpty) {
+      return Stream.empty();
+    } else {
+      return firestore
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: userIds)
+          .snapshots();
+    }
   }
 
   // for adding an user to my user when first message is send

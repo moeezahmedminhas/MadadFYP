@@ -71,7 +71,7 @@ class _GetPsyState extends State<GetPsy> {
           }
         },
         child: Scaffold(
-          appBar: AppBar(title: Text("Psychiatrists")),
+          appBar: AppBar(title: const Text("Psychiatrists")),
           //floating button to add new user
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 10),

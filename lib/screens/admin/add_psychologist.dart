@@ -17,6 +17,10 @@ class _AddPsyState extends State<AddPsy> {
   String password = "";
   String name = "";
   String gender = '';
+  int age = 0;
+
+  List selectGender = ["Male", "Female", "Other"];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,11 +99,10 @@ class _AddPsyState extends State<AddPsy> {
                     height: 10,
                   ),
                   TextFormField(
-                    obscureText: true,
                     decoration: textInputDecoration.copyWith(
                       labelText: "Name",
                       prefixIcon: Icon(
-                        Icons.email,
+                        Icons.person,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
@@ -121,23 +124,60 @@ class _AddPsyState extends State<AddPsy> {
                     height: 10,
                   ),
                   TextFormField(
-                    obscureText: true,
                     decoration: textInputDecoration.copyWith(
-                      labelText: "Gender",
+                      labelText: "Age",
                       prefixIcon: Icon(
-                        Icons.person_2_sharp,
+                        Icons.person,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
                     onChanged: (val) {
                       setState(() {
-                        gender = val;
+                        age = int.parse(val);
                       });
                     },
                     validator: (val) {
-                      if (val!.isEmpty) {
-                        return "Gender Cannot be empty";
+                      if (int.parse(val!) == 0) {
+                        return "Age Cannot be empty";
                       }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  DropdownButtonFormField(
+                    // Initial Value
+                    decoration: textInputDecoration.copyWith(
+                      labelText: "Gender",
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    hint: const Text("Select Gender"),
+
+                    isExpanded: true,
+                    // Down Arrow Icon
+                    icon: const Icon(
+                      Icons.arrow_drop_down_circle,
+                      color: Colors.deepOrangeAccent,
+                    ),
+
+                    // Array list of items
+                    items: selectGender.map((items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+
+                    onChanged: (newValue) {
+                      setState(() {
+                        gender = newValue.toString();
+                      });
                     },
                   ),
                   const SizedBox(
@@ -160,6 +200,7 @@ class _AddPsyState extends State<AddPsy> {
                       ),
                       onPressed: () {
                         login();
+                        Navigator.of(context).pop();
                       },
                     ),
                   ),
@@ -184,7 +225,13 @@ class _AddPsyState extends State<AddPsy> {
 
       if (user != null) {
         // call our database service to update the user data.
-        await APIs.createPsy(uid: user.uid, profession: "psychiatrist");
+        await APIs.createPsy(
+          uid: user.uid,
+          name: name,
+          profession: "psychologist",
+          gender: gender,
+          age: age,
+        );
         return true;
       }
     } on FirebaseAuthException catch (e) {

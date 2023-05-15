@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:madad_final/screens/admin/add_psychiatrists.dart';
+import 'package:madad_final/screens/admin/add_psychologist.dart';
 import 'package:madad_final/screens/admin/add_questions.dart';
+import 'package:madad_final/screens/admin/remove_psychologist.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/apis.dart';
@@ -32,10 +33,9 @@ class _AdminHomeState extends State<AdminHome> {
               //for showing progress dialog
               Dialogs.showProgressBar(context);
 
-              await APIs.updateActiveStatus(false);
+              APIs.updateActiveStatus(false);
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.clear();
-
               //sign out from app
               await APIs.auth.signOut().then((value) async {
                 await GoogleSignIn().signOut().then((value) {
@@ -76,7 +76,35 @@ class _AdminHomeState extends State<AdminHome> {
                         Icons.add,
                         size: 30,
                       ),
-                      Text("ADD Psychiatrists ")
+                      Text("Add Psychologist ")
+                    ],
+                  )),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              hoverColor: Colors.blueGrey,
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => UserListScreen())));
+              },
+              child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.amber,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.add,
+                        size: 30,
+                      ),
+                      Text("Show Psychologists ")
                     ],
                   )),
             ),

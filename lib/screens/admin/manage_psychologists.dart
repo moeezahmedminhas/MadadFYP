@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:madad_final/screens/admin/add_psychiatrists.dart';
+import 'package:madad_final/screens/admin/add_psychologist.dart';
 
-class ManagePsychiatrists extends StatefulWidget {
-  const ManagePsychiatrists({super.key});
+class ManagePsychologists extends StatefulWidget {
+  const ManagePsychologists({super.key});
 
   @override
-  State<ManagePsychiatrists> createState() => _ManagePsychiatristsState();
+  State<ManagePsychologists> createState() => _ManagePsychologistsState();
 }
 
-class _ManagePsychiatristsState extends State<ManagePsychiatrists> {
+class _ManagePsychologistsState extends State<ManagePsychologists> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

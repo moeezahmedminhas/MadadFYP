@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
 import 'package:madad_final/screens/quiz.dart';
@@ -371,14 +373,14 @@ class _AssesmentScreenState extends State<AssesmentScreen> {
 
   void _answerQuestion(int score) async {
     arr.add(score);
-    print(arr);
+    log(arr.toString());
 
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
-    print(_questionIndex);
+    log(_questionIndex.toString());
     if (_questionIndex < _questions.length) {
-      print('We have more questions!');
+      log('We have more questions!');
     } else {
       var floatArr = arr.map((i) => i.toDouble()).toList();
       final interpreter = await tfl.Interpreter.fromAsset('model.tflite');

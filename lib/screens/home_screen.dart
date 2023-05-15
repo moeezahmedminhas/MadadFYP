@@ -200,6 +200,7 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:madad_final/screens/audio_screen.dart';
 import 'package:madad_final/screens/getPsy.dart';
 import 'package:madad_final/screens/questionnaires.dart';
 
@@ -234,6 +235,21 @@ class _HomeScreenState extends State<HomeScreen> {
           InkWell(
             child: buildContainer(
                 const Text(
+                  "Listen Music",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+                'assets/music.webp'),
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AudioListScreen()));
+            },
+          ),
+          InkWell(
+            child: buildContainer(
+                const Text(
                   "Psychiatrists",
                   style: TextStyle(
                     color: Colors.white,
@@ -260,10 +276,17 @@ class _HomeScreenState extends State<HomeScreen> {
         image: DecorationImage(image: AssetImage(pic), fit: BoxFit.cover),
       ),
       margin: const EdgeInsets.all(10),
-      height: 150,
+      height: 200,
       width: double.infinity,
-      child: Center(
-        child: child,
+      child: Container(
+        color: Colors.black12,
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            color: Colors.black45,
+            child: child,
+          ),
+        ),
       ),
     );
   }

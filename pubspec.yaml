@@ -43,6 +43,7 @@ dependencies:
   firebase_storage: ^11.0.15
   shared_preferences: ^2.0.18
   firebase_admin: ^0.2.0
+  flutter_svg: ^2.0.5
 
   emoji_picker_flutter: ^1.5.1
 
@@ -87,6 +88,7 @@ flutter:
   assets:
     - images/
     - assets/
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

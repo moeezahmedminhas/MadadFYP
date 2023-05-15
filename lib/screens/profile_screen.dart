@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:madad_final/screens/auth/change_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../helper/dialogs.dart';
 import '../main.dart';
@@ -269,6 +270,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: const Icon(Icons.edit),
                     label: const Text("Save"),
                   ),
+                  const SizedBox(
+                    width: double.infinity,
+                    height: 30,
+                  ),
+                  (!checkGoogle())
+                      ? FloatingActionButton.extended(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ChangePasswordScreen()));
+                          },
+                          icon: const Icon(Icons.password),
+                          label: const Text("Change Password"),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -276,6 +292,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  bool checkGoogle() {
+    for (final UserInfo userInfo in APIs.user.providerData) {
+      if (userInfo.providerId == GoogleAuthProvider.PROVIDER_ID) {
+        print('User is signed in with Google');
+        return true;
+      }
+    }
+    return false;
   }
 
   void _showBottomSheet() {

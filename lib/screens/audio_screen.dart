@@ -28,18 +28,27 @@ class AudioListScreen extends StatelessWidget {
             itemCount: documents.length,
             itemBuilder: (context, index) {
               final document = documents[index];
-              final url = document['url'];
+              final url = document['name'];
 
-              return ListTile(
-                title: Text('Audio ${index + 1}'),
-                subtitle: Text(url),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => AudioPlayerScreen(url: url),
-                    ),
-                  );
-                },
+              return Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: Colors.orange,
+                    width: 2, //<-- SEE HERE
+                  ),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: ListTile(
+                  title: Text(url),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => AudioPlayerScreen(url: url),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );
@@ -92,6 +101,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.amber,
       appBar: AppBar(
         title: const Text('Audio Player'),
       ),
@@ -110,10 +120,12 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
               icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
               iconSize: 64.0,
             ),
-            const SizedBox(height: 16.0),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.2),
             const Text('Now Playing'),
-            const SizedBox(height: 8.0),
-            Text(widget.url),
+            Text(
+              widget.url,
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+            ),
           ],
         ),
       ),

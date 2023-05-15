@@ -1,16 +1,21 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:madad_final/helper/dialogs.dart';
 import 'package:madad_final/screens/admin/admin_home.dart';
-import 'package:madad_final/screens/psychiaterist/psy_home.dart';
+import 'package:madad_final/screens/auth/signup_screen.dart';
 import 'package:madad_final/screens/tabs_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
 import '../../api/apis.dart';
 import '../../widgets/widgets.dart';
+import '../psychologist/psy_home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -95,6 +100,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 20,
                   ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: Image.asset("assets/logo.png"),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   TextFormField(
                     decoration: textInputDecoration.copyWith(
                       labelText: "Email",
@@ -117,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   TextFormField(
                     obscureText: true,
@@ -162,17 +174,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                   ),
+                  Text.rich(TextSpan(
+                    text: "Don't have an account? ",
+                    style: const TextStyle(color: Colors.black, fontSize: 14),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: "Register here",
+                          style: const TextStyle(
+                              color: Colors.black,
+                              decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SignUpScreen()));
+                            }),
+                    ],
+                  )),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    "Login to Get Your Therapy",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-                  ),
-                  Image.asset("assets/logo.png"),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -202,14 +225,24 @@ class _LoginScreenState extends State<LoginScreen> {
       APIs.auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
-        APIs.getSelfInfo();
-        if (email == "moiz@gmail.com") {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const AdminHome()));
-        } else {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const PsyHome()));
-        }
+        APIs.getSelfInfo().then((value) async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          if (context.mounted) {
+            prefs.setString("role", APIs.me.profession);
+            if (APIs.me.profession == "psychologist") {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PsyTabsScreen()));
+            } else if (APIs.me.profession == "user") {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const TabsScreen()));
+            } else if (APIs.me.profession == "admin") {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const AdminHome()));
+            }
+          }
+        });
       });
     }
   }

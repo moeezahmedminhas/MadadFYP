@@ -98,7 +98,9 @@ class _AudioUploadScreenState extends State<AudioUploadScreen> {
 
     await uploadTask.whenComplete(() => null);
     final downloadUrl = await reference.getDownloadURL();
-    _firestore.collection('audio').add({'url': downloadUrl});
+    _firestore
+        .collection('audio')
+        .add({'url': downloadUrl, "name": _audioNameController.text});
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

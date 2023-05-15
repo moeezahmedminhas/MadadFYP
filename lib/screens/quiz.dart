@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import './question.dart';
-import './answer.dart';
 
 class Quiz extends StatelessWidget {
   final List<Map<String, Object>> questions;
@@ -39,12 +38,10 @@ class Answer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       width: double.infinity,
       child: ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all(Theme.of(context).primaryColor)),
         onPressed: selectHandler,
         child: Text(answerText),
       ),
